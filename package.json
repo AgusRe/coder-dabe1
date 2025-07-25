@@ -1,0 +1,23 @@
+{
+  "name": "curso-dbe1",
+  "version": "1.0.0",
+  "description": "Desarrollo Avanzado de Backend 1",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgusRe/coder-dabe1.git"
+  },
+  "author": "Agustín Ré",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AgusRe/coder-dabe1/issues"
+  },
+  "homepage": "https://github.com/AgusRe/coder-dabe1#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

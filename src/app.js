@@ -1,35 +1,16 @@
-const UserManager = require('./managers/UserManager.js');
+import express from 'express';
+import productsRouter from "./routers/products.router.js";
+import cartsRouter from "./routers/carts.router.js";
 
-const path = require('path');
+const app = express();
 
-const usersFilePath = path.join(__dirname, 'users.json');
+const PORT = 8080;
 
-const manager = new UserManager(usersFilePath);
+app.use(express.json())
 
-const test = async () => {
-    console.log("Agregar usuario");
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter)
 
-    await manager.addUser({
-        name: "Agustín",
-        email: "mail@gmail.com",
-        age: 22
-    });
-
-    await manager.addUser({
-        name: "Pedro",
-        email: "mailasd@gmail.com",
-        age: 26
-    });
-
-    await manager.addUser({
-        name: "Abril",
-        email: "maifasfl@gmail.com",
-        age: 18
-    });
-
-    console.log("\n Lista de usuarios \n");
-    const todos = await manager.getUsers();
-    console.log(todos);
-}
-
-test()
+app.listen(PORT, () => {
+    console.log(`El servidor está corriendo en el puerto: ${PORT}`);
+});

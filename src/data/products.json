@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "title": "Teclado Mecánico",
+    "description": "Teclado con switches verdes",
+    "code": "tecladito123",
+    "price": 4950,
+    "status": true,
+    "stock": 5,
+    "category": "Periféricos",
+    "thumbnails": [
+      "img1.jpg",
+      "img2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Teclado Mecánico",
+    "description": "Teclado con switches verdes",
+    "code": "tecladito123",
+    "price": 4950,
+    "status": true,
+    "stock": 5,
+    "category": "Periféricos",
+    "thumbnails": [
+      "img1.jpg",
+      "img2.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Teclado Mecánico",
+    "description": "Teclado con switches verdes",
+    "code": "tecladito123",
+    "price": 4950,
+    "status": true,
+    "stock": 5,
+    "category": "Periféricos",
+    "thumbnails": [
+      "img1.jpg",
+      "img2.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Teclado Mecánico",
+    "description": "Teclado con switches verdes",
+    "code": "tecladito123",
+    "price": 4950,
+    "status": true,
+    "stock": 5,
+    "category": "Periféricos",
+    "thumbnails": [
+      "img1.jpg",
+      "img2.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Teclado Mecánico",
+    "description": "Teclado con switches verdes",
+    "code": "tecladito123",
+    "price": 4950,
+    "status": true,
+    "stock": 5,
+    "category": "Periféricos",
+    "thumbnails": [
+      "img1.jpg",
+      "img2.jpg"
+    ]
+  }
+]

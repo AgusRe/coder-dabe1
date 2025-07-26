@@ -1,3 +1,0 @@
-// fs
-
-const fs = require

@@ -1,2 +1,5 @@
+# VSCode local history
 .history/
-./node_modules/
+
+# Node.js dependencies
+node_modules/

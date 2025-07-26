@@ -1,4 +1,4 @@
-# curso-dbe1
+# Curso de Programación Backend I: Desarrollo Avanzado de Backend
 
 **Desarrollo Avanzado de Backend 1**
 

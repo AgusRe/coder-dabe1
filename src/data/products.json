@@ -68,5 +68,27 @@
       "img1.jpg",
       "img2.jpg"
     ]
+  },
+  {
+    "id": 6,
+    "title": "bananas",
+    "description": "vit",
+    "code": "12031",
+    "price": 1231245,
+    "status": true,
+    "stock": 123,
+    "category": "Fruta",
+    "thumbnails": []
+  },
+  {
+    "id": 7,
+    "title": "Auricular",
+    "description": "Auricular gamer",
+    "code": "490",
+    "price": 2340978,
+    "status": true,
+    "stock": 90,
+    "category": "Auricular",
+    "thumbnails": []
   }
 ]

@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename); // Obtiene el directorio del archivo
 
 class ProductManager {
     constructor(filePath) {
-        this.path = path.resolve(__dirname, '..', filePath);
+        this.path = filePath;
     }
 
     async getProducts() {

@@ -1,13 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Curso DBE - Entrega Final</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 20px; }
+    header { margin-bottom: 20px; }
+    nav a { margin-right: 10px; }
+    .product { margin-bottom: 10px; }
+    form.inline { display: inline; }
+    .pagination { margin-top: 20px; }
+  </style>
 </head>
 <body>
+  <header>
+    <nav>
+      <a href="/products">Productos</a>
+      <a href="/realtimeproducts">Real Time Products</a>
+      <a href="/carts/1">Ver carrito 1</a>
+    </nav>
+  </header>
+
   {{{body}}}
 
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/realtime.js" defer></script>
 </body>
 </html>

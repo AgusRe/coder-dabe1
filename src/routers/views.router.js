@@ -26,6 +26,17 @@ router.get("/products", async (req, res) => {
       lean: true
     });
 
+    // Construir base url para links manteniendo otros query params
+    const baseUrl = (p) => {
+      const params = new URLSearchParams();
+      if (p) params.set("page", p);
+      if (limit) params.set("limit", limit);
+      if (sort) params.set("sort", sort);
+      if (query) params.set("query", query);
+      const s = params.toString();
+      return `/products${s ? "?" + s : ""}`;
+    };
+
     res.render("products", {
       products: result.docs,
       hasPrevPage: result.hasPrevPage,
@@ -33,7 +44,10 @@ router.get("/products", async (req, res) => {
       prevPage: result.prevPage,
       nextPage: result.nextPage,
       page: result.page,
-      totalPages: result.totalPages
+      totalPages: result.totalPages,
+      prevLink: result.hasPrevPage ? baseUrl(result.prevPage) : null,
+      nextLink: result.hasNextPage ? baseUrl(result.nextPage) : null,
+      queryParams: { page, limit, sort, query }
     });
   } catch (err) {
     res.status(500).send("Error al cargar productos");
@@ -65,6 +79,15 @@ router.get("/carts/:cid", async (req, res) => {
     res.render("cartDetail", { cart });
   } catch (err) {
     res.status(500).send("Error al cargar carrito");
+  }
+});
+
+router.get("/realtimeproducts", async (req, res) => {
+  try {
+    const products = await productModel.find().lean();
+    res.render("realTimeProducts", { products });
+  } catch (err) {
+    res.status(500).send("Error al cargar realtime products");
   }
 });
 

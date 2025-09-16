@@ -1,27 +1,38 @@
 <h1>Productos</h1>
 
+<form method="get" action="/products">
+  <input type="text" name="query" placeholder="Categoría o 'available'" value="{{queryParams.query}}" />
+  <select name="sort">
+    <option value="">Orden</option>
+    <option value="asc" {{#if (eq queryParams.sort "asc")}}selected{{/if}}>Precio ↑</option>
+    <option value="desc" {{#if (eq queryParams.sort "desc")}}selected{{/if}}>Precio ↓</option>
+  </select>
+  <input type="number" name="limit" min="1" placeholder="limit" value="{{queryParams.limit}}" />
+  <button type="submit">Filtrar</button>
+</form>
+
 <ul>
   {{#each products}}
-    <li>
+    <li class="product">
       <a href="/products/{{this._id}}">
         <strong>{{this.title}}</strong>
       </a>
-      - ${{this.price}}
-      <form action="/api/carts/1/products/{{this._id}}" method="post" style="display:inline;">
+      - ${{this.price}} - {{this.category}}
+      <form class="inline" action="/api/carts/1/products/{{this._id}}" method="post">
         <button type="submit">Agregar al carrito</button>
       </form>
     </li>
   {{/each}}
 </ul>
 
-<div>
-  {{#if hasPrevPage}}
-    <a href="/products?page={{prevPage}}">⬅️ Página {{prevPage}}</a>
+<div class="pagination">
+  {{#if prevLink}}
+    <a href="{{prevLink}}">Página Anterior {{prevPage}}</a>
   {{/if}}
 
-  <span>Página {{page}} de {{totalPages}}</span>
+  <span> Página {{page}} de {{totalPages}} </span>
 
-  {{#if hasNextPage}}
-    <a href="/products?page={{nextPage}}">Página {{nextPage}} ➡️</a>
+  {{#if nextLink}}
+    <a href="{{nextLink}}">Página Siguiente {{nextPage}}</a>
   {{/if}}
 </div>

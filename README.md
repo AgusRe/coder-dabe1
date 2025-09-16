@@ -1,86 +1,100 @@
-# Curso de Programación Backend I: Desarrollo Avanzado de Backend
+# Coderhouse - Desarrollo Backend I
 
-**Desarrollo Avanzado de Backend 1**
+## 📌 Proyecto Final
 
----
-
-## Dependencias
-
-- **express** (`^5.1.0`): Framework web para crear el servidor y las rutas HTTP.  
-- **nodemon** (`^3.1.10`): Reinicio automático del servidor durante el desarrollo.  
-- **express-handlebars**: Motor de plantillas para renderizar vistas.  
-- **socket.io**: Comunicación en tiempo real entre servidor y cliente.
+Este proyecto implementa un servidor backend en **Node.js con Express**, persistencia de datos en **MongoDB**, motor de plantillas **Handlebars** y comunicación en tiempo real con **Socket.IO**.  
+Forma parte de las entregas del curso de **Desarrollo Backend Avanzado** en Coderhouse.
 
 ---
 
-## Scripts
+## 🚀 Tecnologías y Dependencias
 
-- `npm run dev`  
-  Inicia el servidor en modo desarrollo con nodemon:
-  ```bash
-  npm install
-  npm run dev
-  ```
+- **Node.js + Express** → Servidor y enrutamiento.
+- **MongoDB + Mongoose** → Persistencia principal de productos y carritos.
+- **Express-Handlebars** → Motor de plantillas para renderizar vistas.
+- **Socket.IO** → Comunicación en tiempo real para la vista `realtimeproducts`.
+- **Nodemon** → Herramienta de desarrollo para autorecargar el servidor.
 
----
+Instalación de dependencias:
 
-## Estructura de rutas
+```bash
+npm install
+```
 
-### API de Productos (`/api/products`)
+Correr en modo desarrollo:
 
-- `GET /` – Listar todos los productos  
-- `GET /:pid` – Obtener un producto por ID  
-- `POST /` – Crear un producto  
-- `PUT /:pid` – Actualizar un producto  
-- `DELETE /:pid` – Eliminar un producto  
-
-### API de Carritos (`/api/carts`)
-
-- `POST /` – Crear un carrito nuevo  
-- `GET /:cid` – Listar productos de un carrito  
-- `POST /:cid/product/:pid` – Agregar un producto al carrito  
+```bash
+npm run dev
+```
 
 ---
 
-## Vistas con Handlebars
+## 📂 Estructura de Rutas
 
-- **Home (`/`)**  
-  Muestra un listado de todos los productos (renderizado vía HTTP).  
+### 🔹 Productos (`/api/products`)
 
-- **Real Time Products (`/realtimeproducts`)**  
-  Muestra la lista de productos y se actualiza automáticamente gracias a **WebSockets**:
-  - Al crear un producto con el formulario, se emite un evento al servidor y todos los clientes conectados actualizan la lista.
-  - Al eliminar un producto, también se actualiza en tiempo real.
+- **GET /** → Listar productos con soporte para `limit`, `page`, `sort` y `query` (categoría o disponibilidad).  
+  Devuelve objeto con paginación:
+
+```json
+{
+  "status": "success",
+  "payload": [...],
+  "totalPages": 5,
+  "prevPage": 1,
+  "nextPage": 3,
+  "page": 2,
+  "hasPrevPage": true,
+  "hasNextPage": true,
+  "prevLink": "...",
+  "nextLink": "..."
+}
+```
+
+- **GET /:pid** → Obtener un producto por ID.
+- **POST /** → Crear un producto nuevo.
+- **PUT /:pid** → Actualizar un producto existente (excepto su ID).
+- **DELETE /:pid** → Eliminar un producto.
+
+### 🔹 Carritos (`/api/carts`)
+
+- **POST /** → Crear un carrito nuevo.
+- **GET /:cid** → Listar productos de un carrito (con `populate` de productos).
+- **POST /:cid/product/:pid** → Agregar un producto al carrito.  
+  Si ya existe, incrementa la cantidad.
+- **PUT /:cid** → Actualizar todos los productos del carrito con un nuevo arreglo.
+- **PUT /:cid/products/:pid** → Actualizar solo la cantidad de un producto.
+- **DELETE /:cid/products/:pid** → Eliminar un producto específico del carrito.
+- **DELETE /:cid** → Vaciar el carrito completo.
 
 ---
 
-## Cómo probar la aplicación
+## 🖥️ Vistas con Handlebars
 
-1. Instalar dependencias:
-   ```bash
-   npm install
-   ```
+### `/products`
+Lista de productos con paginación y botones de “Agregar al carrito”.  
 
-2. Iniciar el servidor:
-   ```bash
-   npm run dev
-   ```
+### `/products/:pid`
+Vista detallada de un producto (nombre, descripción, precio, categoría) con botón para agregar al carrito.  
 
-3. Probar API REST con **Postman** en:
-   - `http://localhost:8080/api/products`
-   - `http://localhost:8080/api/carts`
+### `/carts/:cid`
+Visualización de un carrito específico con todos sus productos.  
 
-4. Probar vistas en el navegador:
-   - `http://localhost:8080/` → listado de productos (HTTP).  
-   - `http://localhost:8080/realtimeproducts` → listado en tiempo real (WebSockets).  
-
-5. En **/realtimeproducts**:
-   - Usar el formulario para **agregar productos**.
-   - Usar el formulario para **eliminar productos** por ID.
-   - Ver cómo la lista se actualiza automáticamente en todos los navegadores abiertos.
+### `/realtimeproducts`
+Lista de productos que se actualiza en tiempo real mediante **WebSockets**.  
+Permite agregar y eliminar productos desde un formulario sin recargar la página.
 
 ---
 
-## Autor
+## 📡 WebSockets (Socket.IO)
 
-Agustín Ré
+En la vista **`/realtimeproducts`**:
+- Cada vez que se crea un producto → se actualiza automáticamente la lista en todas las pestañas abiertas.
+- Cada vez que se elimina un producto → desaparece en tiempo real de todas las pestañas.
+
+---
+
+## 📝 Autor
+
+- **Agustín Ré**  
+[Repositorio en GitHub](https://github.com/AgusRe/coder-dabe1)

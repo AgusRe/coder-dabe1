@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 import productsRouter from "./routers/products.router.js";
 import cartsRouter from "./routers/carts.router.js";
 import viewsRouter from "./routers/views.router.js";
-import { productModel } from "./models/Product.model.js";
+import Product from "./models/Product.model.js";
 import clientRouter from "./routers/client.router.js";
 
 // Constantes para ESModules
@@ -20,7 +20,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const servidorHttp = http.createServer(app);
 const io = new Server(servidorHttp);
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // Conexión a MongoDB
 const MONGO_URI = "mongodb+srv://Agustin:dbexamples123@cluster0.7a2muft.mongodb.net/coderhouse?retryWrites=true&w=majority&appName=Cluster0";
@@ -40,17 +40,17 @@ app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
 
 // Routers
-app.use("/products", productsRouter);
-app.use("/carts", cartsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
 
 // Redirigir raíz a productos
 app.get("/", (req, res) => {
-  res.redirect("/products");
+  res.redirect("/api/products");
 });
 
 // Clientes
-app.use("/clients", clientRouter);
+app.use("/api/clients", clientRouter);
 
 // WebSockets
 io.on("connection", async (socket) => {
@@ -61,17 +61,27 @@ io.on("connection", async (socket) => {
   socket.emit("updateProducts", productos);
 
   // escucha creacion de producto
-  socket.on("newProduct", async (data) => {
-    await productModel.create(data);
-    const productos = await productModel.find().lean();
-    io.emit("updateProducts", productos);
+  socket.on("newProduct", async (data, ack) => {
+    try {
+      await Product.create(data);
+      const list = await Product.find().lean();
+      io.emit("updateProducts", list);
+      if (ack) ack({ status: "success" });
+    } catch (err) {
+      if (ack) ack({ status: "error", error: err.message });
+    }
   });
 
   // escucha eliminacion de producto
-  socket.on("deleteProduct", async (id) => {
-    await productModel.findByIdAndDelete(id);
-    const productos = await productModel.find().lean();
-    io.emit("updateProducts", productos);
+  socket.on("deleteProduct", async (id, ack) => {
+    try {
+      await Product.findByIdAndDelete(id);
+      const list = await Product.find().lean();
+      io.emit("updateProducts", list);
+      if (ack) ack({ status: "success" });
+    } catch (err) {
+      if (ack) ack({ status: "error", error: err.message });
+    }
   });
 });
 

@@ -2,8 +2,8 @@
 
 ## 📌 Proyecto Final
 
-Este proyecto implementa un servidor backend en **Node.js con Express**, persistencia de datos en **MongoDB**, motor de plantillas **Handlebars** y comunicación en tiempo real con **Socket.IO**.  
-Forma parte de las entregas del curso de **Desarrollo Backend Avanzado** en Coderhouse.
+Este proyecto implementa un servidor backend en **Node.js con Express**, con persistencia principal en **MongoDB** usando **Mongoose**, motor de plantillas **Handlebars** y comunicación en tiempo real con **Socket.IO**.  
+Forma parte de la entrega final del curso de **Desarrollo Backend Avanzado** en Coderhouse.
 
 ---
 
@@ -11,9 +11,10 @@ Forma parte de las entregas del curso de **Desarrollo Backend Avanzado** en Code
 
 - **Node.js + Express** → Servidor y enrutamiento.
 - **MongoDB + Mongoose** → Persistencia principal de productos y carritos.
+- **mongoose-paginate-v2** → Paginación, filtros y ordenamiento en productos.
 - **Express-Handlebars** → Motor de plantillas para renderizar vistas.
-- **Socket.IO** → Comunicación en tiempo real para la vista `realtimeproducts`.
-- **Nodemon** → Herramienta de desarrollo para autorecargar el servidor.
+- **Socket.IO** → Comunicación en tiempo real en `/realtimeproducts`.
+- **Nodemon** → Desarrollo con recarga automática.
 
 Instalación de dependencias:
 
@@ -33,7 +34,7 @@ npm run dev
 
 ### 🔹 Productos (`/api/products`)
 
-- **GET /** → Listar productos con soporte para `limit`, `page`, `sort` y `query` (categoría o disponibilidad).  
+- **GET /** → Listar productos con soporte para `limit`, `page`, `sort` y `query`.  
   Devuelve objeto con paginación:
 
 ```json

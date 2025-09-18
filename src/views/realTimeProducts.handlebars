@@ -2,13 +2,12 @@
 
 <ul id="productsList">
   {{#each products}}
-    <li>
+    <li data-id="{{this._id}}">
       <strong>{{this.title}}</strong> - ${{this.price}}
+      <button class="deleteBtn" data-id="{{this._id}}">Eliminar</button>
     </li>
   {{/each}}
 </ul>
-
-<hr />
 
 <h2>Agregar producto</h2>
 <form id="productForm">
@@ -18,10 +17,9 @@
   <input type="number" name="price" placeholder="Precio" required />
   <input type="number" name="stock" placeholder="Stock" required />
   <input type="text" name="category" placeholder="Categoría" required />
-  <input type="text" name="thumbnails" placeholder="Imagen (opcional)" />
+  <input type="text" name="thumbnails" placeholder="Thumbnail (opcional, coma separado)" />
   <button type="submit">Agregar</button>
 </form>
-
 
 <hr />
 

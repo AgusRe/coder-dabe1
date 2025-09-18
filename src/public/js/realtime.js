@@ -16,17 +16,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Enviar nuevo producto
-  const productForm = document.getElementById("productForm");
-  if (productForm) {
-    productForm.addEventListener("submit", (e) => {
+  const form = document.getElementById("productForm");
+  if (form) {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const fd = new FormData(productForm);
-      const product = Object.fromEntries(fd.entries());
-      // parse numeric fields
-      if (product.price) product.price = Number(product.price);
-      if (product.stock) product.stock = Number(product.stock);
-      socket.emit("newProduct", product);
-      productForm.reset();
+      const fd = new FormData(form);
+      const product = {
+        title: fd.get("title"),
+        description: fd.get("description"),
+        code: fd.get("code"),
+        price: Number(fd.get("price")),
+        stock: Number(fd.get("stock")),
+        category: fd.get("category"),
+        thumbnails: fd.get("thumbnails") ? fd.get("thumbnails").split(",").map(s => s.trim()) : []
+      };
+      socket.emit("newProduct", product, (ack) => {
+        if (ack && ack.status === "error") alert("Error: " + ack.error);
+      });
+      form.reset();
     });
   }
 
@@ -35,7 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target && e.target.matches("button.deleteBtn")) {
       const id = e.target.dataset.id;
       if (!id) return;
-      socket.emit("deleteProduct", id);
+      socket.emit("deleteProduct", id, (ack) => {
+        if (ack && ack.status === "error") alert("Error: " + ack.error);
+      });
     }
   });
 
@@ -45,19 +54,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (form && form.action && form.action.includes("/api/carts/") && form.method.toLowerCase() === "post") {
       e.preventDefault();
       try {
-        const resp = await fetch(form.action, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" }
-        });
+        const resp = await fetch(form.action, { method: "POST" });
         if (!resp.ok) {
-          const err = await resp.json();
-          alert("Error al agregar al carrito: " + (err.error || err.message || resp.statusText));
+          const body = await resp.json();
+          alert("Error: " + (body.error || body.message || JSON.stringify(body)));
         } else {
           alert("Producto agregado al carrito");
         }
-      } catch (err) {
-        console.error(err);
-        alert("Error de red al agregar al carrito");
+      } catch {
+        alert("Error de red");
       }
     }
   });

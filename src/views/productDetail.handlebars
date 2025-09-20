@@ -1,11 +1,14 @@
-<h1>{{product.title}}</h1>
-<p>{{product.description}}</p>
-<p>Categoría: {{product.category}}</p>
-<p>Precio: ${{product.price}}</p>
-<p>Stock: {{product.stock}}</p>
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">{{product.title}}</h2>
+    <p class="card-text">{{product.description}}</p>
+    <p><strong>Categoría:</strong> {{product.category}}</p>
+    <p><strong>Precio:</strong> ${{product.price}}</p>
+    <p><strong>Stock:</strong> {{product.stock}}</p>
 
-<form action="/api/carts/1/products/{{product._id}}" method="post">
-  <button type="submit">Agregar al carrito</button>
-</form>
-
-<p><a href="/products">Volver</a></p>
+    <form action="/api/carts/1/products/{{product._id}}" method="post">
+      <button type="submit" class="btn btn-success">Agregar al carrito</button>
+    </form>
+    <a href="/products" class="btn btn-link mt-3">Volver</a>
+  </div>
+</div>

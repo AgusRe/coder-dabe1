@@ -1,33 +1,24 @@
-<h1>Productos en tiempo real</h1>
+<h1 class="mb-4">Productos en tiempo real</h1>
 
-<ul id="productsList">
+<ul id="productsList" class="list-group mb-4">
   {{#each products}}
-    <li data-id="{{this._id}}">
-      <strong>{{this.title}}</strong> - ${{this.price}}
-      <button class="deleteBtn" data-id="{{this._id}}">Eliminar</button>
+    <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{this._id}}">
+      <span><strong>{{this.title}}</strong> - ${{this.price}}</span>
+      <button class="btn btn-sm btn-danger deleteBtn" data-id="{{this._id}}">Eliminar</button>
     </li>
   {{/each}}
 </ul>
 
 <h2>Agregar producto</h2>
-<form id="productForm">
-  <input type="text" name="title" placeholder="Título" required />
-  <input type="text" name="description" placeholder="Descripción" required />
-  <input type="text" name="code" placeholder="Código" required />
-  <input type="number" name="price" placeholder="Precio" required />
-  <input type="number" name="stock" placeholder="Stock" required />
-  <input type="text" name="category" placeholder="Categoría" required />
-  <input type="text" name="thumbnails" placeholder="Thumbnail (opcional, coma separado)" />
-  <button type="submit">Agregar</button>
+<form id="productForm" class="row g-3">
+  <div class="col-md-4"><input type="text" name="title" class="form-control" placeholder="Título" required /></div>
+  <div class="col-md-4"><input type="text" name="description" class="form-control" placeholder="Descripción" required /></div>
+  <div class="col-md-4"><input type="text" name="code" class="form-control" placeholder="Código" required /></div>
+  <div class="col-md-4"><input type="number" name="price" class="form-control" placeholder="Precio" required /></div>
+  <div class="col-md-4"><input type="number" name="stock" class="form-control" placeholder="Stock" required /></div>
+  <div class="col-md-4"><input type="text" name="category" class="form-control" placeholder="Categoría" required /></div>
+  <div class="col-md-12"><input type="text" name="thumbnails" class="form-control" placeholder="Thumbnail (opcional)" /></div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Agregar</button>
+  </div>
 </form>
-
-<hr />
-
-<h2>Eliminar producto</h2>
-<form id="deleteForm">
-  <input type="number" name="id" placeholder="ID del producto" required />
-  <button type="submit">Eliminar</button>
-</form>
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/realtime.js"></script>

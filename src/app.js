@@ -35,7 +35,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Handlebars
-app.engine("handlebars", engine());
+app.engine("handlebars", engine({
+  helpers: {
+    eq: (a, b) => a === b
+  }
+}));
 app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
 
@@ -46,7 +50,7 @@ app.use("/", viewsRouter);
 
 // Redirigir raíz a productos
 app.get("/", (req, res) => {
-  res.redirect("/api/products");
+  res.redirect("/products");
 });
 
 // Clientes
@@ -57,7 +61,7 @@ io.on("connection", async (socket) => {
   console.log("Cliente conectado:", socket.id);
 
   // enviar productos iniciales
-  const productos = await productModel.find().lean();
+  const productos = await Product.find().lean();
   socket.emit("updateProducts", productos);
 
   // escucha creacion de producto

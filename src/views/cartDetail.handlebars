@@ -1,21 +1,20 @@
 <h1>Carrito {{cart._id}}</h1>
 
 {{#if cart.products.length}}
-  <ul>
+  <ul class="list-group mb-3">
     {{#each cart.products}}
-      <li>
-        <strong>{{this.product.title}}</strong> - ${{this.product.price}} (Cantidad: {{this.quantity}})
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span><strong>{{this.product.title}}</strong> - ${{this.product.price}}</span>
+        <span class="badge bg-primary rounded-pill">x{{this.quantity}}</span>
       </li>
     {{/each}}
   </ul>
-  <form action="/api/carts/{{cart._id}}" method="post" onsubmit="event.preventDefault(); emptyCart('{{cart._id}}')">
-    <button type="submit">Vaciar carrito</button>
-  </form>
+  <button class="btn btn-danger" onclick="emptyCart('{{cart._id}}')">Vaciar carrito</button>
 {{else}}
-  <p>El carrito está vacío</p>
+  <p class="alert alert-info">El carrito está vacío</p>
 {{/if}}
 
-<p><a href="/products">Seguir comprando</a></p>
+<a href="/products" class="btn btn-link mt-3">Seguir comprando</a>
 
 <script>
 async function emptyCart(cid) {

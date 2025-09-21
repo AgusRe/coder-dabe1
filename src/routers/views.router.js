@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Product from "../models/Product.model.js";
-import Cart from "../models/Cart.model.js";
+import cartModel from "../models/Cart.model.js";
 
 const router = Router();
 
@@ -63,17 +63,31 @@ router.get("/products/:pid", async (req, res) => {
   }
 });
 
-// Vista de un carrito específico
-router.get("/carts/:cid", async (req, res) => {
+// Carrito "default" (el primero encontrado)
+router.get("/carts", async (req, res) => {
   try {
-    const cart = await Cart.findById(req.params.cid).populate("products.product").lean();
-    if (!cart) return res.status(404).send("Carrito no encontrado");
-    res.render("cartDetail", { cart });
-  } catch {
-    res.status(500).send("Error al cargar carrito");
+    const cart = await cartModel.findOne().populate("products.product").lean();
+    if (!cart) return res.render("carts", { cart: { products: [] } });
+    res.render("carts", { cart });
+  } catch (err) {
+    console.error("Error al obtener carrito:", err);
+    res.status(500).send("Error interno al obtener carrito");
   }
 });
 
+// Carrito por ID
+router.get("/carts/:cid", async (req, res) => {
+  try {
+    const cart = await cartModel.findById(req.params.cid).populate("products.product").lean();
+    if (!cart) return res.render("carts", { cart: { products: [] } });
+    res.render("carts", { cart });
+  } catch (err) {
+    console.error("Error al obtener carrito:", err);
+    res.status(500).send("Error interno al obtener carrito");
+  }
+});
+
+// Vista de productos en tiempo real
 router.get("/realtimeproducts", async (req, res) => {
   try {
     const products = await Product.find().lean();

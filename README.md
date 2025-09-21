@@ -15,6 +15,8 @@ Forma parte de la entrega final del curso de **Desarrollo Backend Avanzado** en 
 - **Express-Handlebars** → Motor de plantillas para renderizar vistas.
 - **Socket.IO** → Comunicación en tiempo real en `/realtimeproducts`.
 - **Nodemon** → Desarrollo con recarga automática.
+- **Bootstrap 5** → estilos y maquetado responsive.
+- **Method-Override** → soporte para PUT y DELETE en formularios.
 
 Instalación de dependencias:
 
@@ -30,43 +32,29 @@ npm run dev
 
 ---
 
-## 📂 Estructura de Rutas
+## 📂 Rutas principales
 
-### 🔹 Productos (`/api/products`)
+### Productos (`/api/products`)
+- `GET /` → Listar productos (con filtros, paginación y ordenamiento).
+- `GET /:pid` → Obtener un producto por ID.
+- `POST /` → Crear producto.
+- `PUT /:pid` → Actualizar producto.
+- `DELETE /:pid` → Eliminar producto.
 
-- **GET /** → Listar productos con soporte para `limit`, `page`, `sort` y `query`.  
-  Devuelve objeto con paginación:
+### Carritos (`/api/carts`)
+- `POST /` → Crear carrito.
+- `GET /:cid` → Obtener carrito con populate.
+- `POST /:cid/products/:pid` → Agregar producto.
+- `PUT /:cid/products/:pid` → Actualizar cantidad.
+- `DELETE /:cid/products/:pid` → Eliminar producto específico.
+- `PUT /:cid` → Reemplazar todos los productos.
+- `DELETE /:cid` → Vaciar carrito.
 
-```json
-{
-  "status": "success",
-  "payload": [...],
-  "totalPages": 5,
-  "prevPage": 1,
-  "nextPage": 3,
-  "page": 2,
-  "hasPrevPage": true,
-  "hasNextPage": true,
-  "prevLink": "...",
-  "nextLink": "..."
-}
-```
-
-- **GET /:pid** → Obtener un producto por ID.
-- **POST /** → Crear un producto nuevo.
-- **PUT /:pid** → Actualizar un producto existente (excepto su ID).
-- **DELETE /:pid** → Eliminar un producto.
-
-### 🔹 Carritos (`/api/carts`)
-
-- **POST /** → Crear un carrito nuevo.
-- **GET /:cid** → Listar productos de un carrito (con `populate` de productos).
-- **POST /:cid/product/:pid** → Agregar un producto al carrito.  
-  Si ya existe, incrementa la cantidad.
-- **PUT /:cid** → Actualizar todos los productos del carrito con un nuevo arreglo.
-- **PUT /:cid/products/:pid** → Actualizar solo la cantidad de un producto.
-- **DELETE /:cid/products/:pid** → Eliminar un producto específico del carrito.
-- **DELETE /:cid** → Vaciar el carrito completo.
+### Vistas
+- `/products` → Listado con paginación y agregar al carrito.
+- `/products/:pid` → Detalle de producto.
+- `/carts/:cid` → Vista de carrito con `+ / -`, eliminar y total dinámico.
+- `/realtimeproducts` → Vista de productos en tiempo real.
 
 ---
 
@@ -95,7 +83,13 @@ En la vista **`/realtimeproducts`**:
 
 ---
 
+## 🔗 Endpoints para probar
+
+- [http://localhost:8080/products](http://localhost:8080/products) → Productos.  
+- [http://localhost:8080/carts](http://localhost:8080/carts) → Carrito.  
+- [http://localhost:8080/realtimeproducts](http://localhost:8080/realtimeproducts) → Productos en tiempo real.
+
+---
 ## 📝 Autor
 
-- **Agustín Ré**  
-[Repositorio en GitHub](https://github.com/AgusRe/coder-dabe1)
+Desarrollado por **Agustín Ré** como entrega final del curso *Desarrollo Avanzado de Backend* en **Coderhouse**.

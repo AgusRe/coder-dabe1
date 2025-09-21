@@ -56,33 +56,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Eliminar producto completamente
     if (removeBtn) {
-      e.preventDefault();
-      if (!confirm("¿Seguro que deseas eliminar este producto del carrito?")) return;
-      const pid = removeBtn.dataset.pid;
+        e.preventDefault();
+        const result = await showConfirm("¿Seguro que deseas eliminar este producto del carrito?");
+        if (!result.isConfirmed) return;
 
-      try {
-        const resp = await fetch(`/api/carts/${cartId}/products/${pid}`, {
-          method: "DELETE"
-        });
+        try {
+            const resp = await fetch(`/api/carts/${cartId}/products/${pid}`, {
+            method: "DELETE"
+            });
 
-        if (!resp.ok) {
-          const err = await resp.json().catch(() => ({}));
-          alert("Error: " + (err.error || err.message || resp.statusText));
-          return;
+            if (!resp.ok) {
+            const err = await resp.json().catch(() => ({}));
+            showToast(err.error || "Error al eliminar producto", "error");
+            return;
+            }
+
+            const body = await resp.json();
+            const updatedCart = body.cart;
+
+            const card = removeBtn.closest(".col-md-6");
+            if (card) card.remove();
+
+            updateTotal(updatedCart);
+            showToast("Producto eliminado");
+        } catch (err) {
+            console.error("Error removing product:", err);
+            showToast("Error al eliminar producto", "error");
         }
-
-        const body = await resp.json();
-        const updatedCart = body.cart;
-
-        // sacar el producto del DOM
-        const card = removeBtn.closest(".col-md-6");
-        if (card) card.remove();
-
-        updateTotal(updatedCart);
-      } catch (err) {
-        console.error("Error removing product:", err);
-        alert("Error al eliminar producto");
-      }
     }
   });
 

@@ -5,6 +5,7 @@ import path from "path";
 import http from "http";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
+import methodOverride from "method-override";
 
 import productsRouter from "./routers/products.router.js";
 import cartsRouter from "./routers/carts.router.js";
@@ -35,11 +36,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Handlebars
-app.engine("handlebars", engine({
-  helpers: {
-    eq: (a, b) => a === b
-  }
-}));
+app.use(methodOverride("_method"));
+app.engine("handlebars",engine({
+    helpers: {
+      multiply: (a, b) => a * b,
+      totalCart: (products) => {
+        if (!products || products.length === 0) return 0;
+        return products.reduce((sum, item) => {
+          return sum + item.product.price * item.quantity;
+        }, 0);
+      },
+      eq: (a, b) => a === b,
+      neq: (a, b) => a !== b,
+      inc: (a, b) => Number(a) + Number(b)
+    },
+  })
+);
 app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "views"));
 

@@ -22,14 +22,14 @@
 <div class="row">
   {{#each products}}
     <div class="col-md-4 mb-3">
-      <div class="card h-100">
+      <div class="card h-100 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">{{this.title}}</h5>
           <p class="card-text">${{this.price}} - {{this.category}}</p>
           <a href="/products/{{this._id}}" class="btn btn-sm btn-outline-info">Ver detalle</a>
-          <form class="d-inline" action="/api/carts/1/products/{{this._id}}" method="post">
-            <button type="submit" class="btn btn-sm btn-success">Agregar al carrito</button>
-          </form>
+          <button class="btn btn-sm btn-success add-to-cart" data-id="{{this._id}}">
+            Agregar al carrito
+          </button>
         </div>
       </div>
     </div>
@@ -47,3 +47,43 @@
     {{/if}}
   </ul>
 </nav>
+
+<script>
+  async function getOrCreateCart() {
+    let cartId = localStorage.getItem("cartId");
+    if (!cartId) {
+      try {
+        const res = await fetch("/api/carts", { method: "POST" });
+        const data = await res.json();
+        cartId = data._id;
+        localStorage.setItem("cartId", cartId);
+      } catch (err) {
+        console.error("Error creando carrito:", err);
+      }
+    }
+    return cartId;
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const cartId = await getOrCreateCart();
+
+    document.querySelectorAll(".add-to-cart").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const productId = btn.dataset.id;
+
+        try {
+          const res = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ quantity: 1 })
+          });
+
+          if (!res.ok) throw new Error("Error al agregar al carrito");
+          alert("Producto agregado al carrito!");
+        } catch (err) {
+          alert("Error: " + err.message);
+        }
+      });
+    });
+  });
+</script>

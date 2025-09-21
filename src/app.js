@@ -31,8 +31,9 @@ mongoose
   .catch((err) => console.error("Error al conectar a MongoDB:", err));
 
 // Middlewares
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Handlebars
@@ -61,9 +62,7 @@ app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
 
 // Redirigir raíz a productos
-app.get("/", (req, res) => {
-  res.redirect("/products");
-});
+app.get("/", (req, res) => res.redirect("/products"));
 
 // Clientes
 app.use("/api/clients", clientRouter);

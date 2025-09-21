@@ -22,7 +22,6 @@ router.get("/:cid", async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(cid)) {
     return res.status(400).json({ error: "ID inválido" });
   }
-
   try {
     const cart = await cartModel.findById(cid).populate("products.product");
     if (!cart) return res.status(404).json({ error: "Carrito no encontrado" });
@@ -39,23 +38,19 @@ router.post("/:cid/products/:pid", async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(cid) || !mongoose.Types.ObjectId.isValid(pid)) {
     return res.status(400).json({ error: "ID inválido" });
   }
-
   try {
     const cart = await cartModel.findById(cid);
     if (!cart) return res.status(404).json({ error: "Carrito no encontrado" });
-
     const product = await Product.findById(pid);
     if (!product) return res.status(404).json({ error: "Producto no encontrado" });
 
-    const existingProduct = cart.products.find(p => p.product.toString() === pid);
-    if (existingProduct) {
-      existingProduct.quantity += 1;
-    } else {
-      cart.products.push({ product: pid, quantity: 1 });
-    }
+    const existing = cart.products.find((p) => p.product.toString() === pid);
+    if (existing) existing.quantity += 1;
+    else cart.products.push({ product: pid, quantity: 1 });
 
     await cart.save();
-    res.json({ message: "Producto agregado al carrito", cart });
+    const updated = await cartModel.findById(cid).populate("products.product").lean();
+    res.json({ message: "Producto agregado", cart: updated });
   } catch (err) {
     console.error("Error al agregar producto al carrito:", err);
     res.status(500).json({ error: "Error interno al agregar producto al carrito" });
@@ -71,7 +66,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
     return res.status(400).json({ error: "ID inválido" });
   }
 
-  quantity = parseInt(quantity);
+  quantity = parseInt(quantity, 10);
   if (isNaN(quantity)) {
     return res.status(400).json({ error: "Cantidad inválida" });
   }
@@ -80,19 +75,18 @@ router.put("/:cid/products/:pid", async (req, res) => {
     const cart = await cartModel.findById(cid);
     if (!cart) return res.status(404).json({ error: "Carrito no encontrado" });
 
-    const productInCart = cart.products.find(p => p.product.toString() === pid);
-    if (!productInCart) {
-      return res.status(404).json({ error: "Producto no encontrado en carrito" });
-    }
+    const productInCart = cart.products.find((p) => p.product.toString() === pid);
+    if (!productInCart) return res.status(404).json({ error: "Producto no encontrado en carrito" });
 
     if (quantity <= 0) {
-      cart.products = cart.products.filter(p => p.product.toString() !== pid);
+      cart.products = cart.products.filter((p) => p.product.toString() !== pid);
     } else {
       productInCart.quantity = quantity;
     }
 
     await cart.save();
-    res.json({ message: "Cantidad actualizada", cart });
+    const updated = await cartModel.findById(cid).populate("products.product").lean();
+    res.json({ message: "Cantidad actualizada", cart: updated });
   } catch (err) {
     console.error("Error al actualizar cantidad:", err);
     res.status(500).json({ error: "Error interno al actualizar cantidad" });
@@ -115,7 +109,8 @@ router.put("/:cid", async (req, res) => {
     cart.products = products;
     await cart.save();
 
-    res.json({ message: "Carrito actualizado", cart });
+    const updated = await cartModel.findById(cid).populate("products.product").lean();
+    res.json({ message: "Carrito actualizado", cart: updated });
   } catch (err) {
     console.error("Error al actualizar carrito:", err);
     res.status(500).json({ error: "Error interno al actualizar carrito" });
@@ -134,10 +129,11 @@ router.delete("/:cid/products/:pid", async (req, res) => {
     const cart = await cartModel.findById(cid);
     if (!cart) return res.status(404).json({ error: "Carrito no encontrado" });
 
-    cart.products = cart.products.filter(p => p.product.toString() !== pid);
+    cart.products = cart.products.filter((p) => p.product.toString() !== pid);
     await cart.save();
 
-    res.json({ message: "Producto eliminado del carrito", cart });
+    const updated = await cartModel.findById(cid).populate("products.product").lean();
+    res.json({ message: "Producto eliminado del carrito", cart: updated });
   } catch (err) {
     console.error("Error al eliminar producto:", err);
     res.status(500).json({ error: "Error interno al eliminar producto" });
@@ -159,7 +155,8 @@ router.delete("/:cid", async (req, res) => {
     cart.products = [];
     await cart.save();
 
-    res.json({ message: "Carrito vaciado", cart });
+    const updated = await cartModel.findById(cid).populate("products.product").lean();
+    res.json({ message: "Carrito vaciado", cart: updated });
   } catch (err) {
     console.error("Error al vaciar carrito:", err);
     res.status(500).json({ error: "Error interno al vaciar carrito" });

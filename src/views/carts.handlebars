@@ -2,34 +2,25 @@
   <h1 class="mb-4">Mi Carrito</h1>
 
   {{#if cart.products.length}}
-  <div class="cart-container row">
-    <!-- Productos -->
-    <div class="cart-products col-md-8">
+  <div class="row">
+    <div class="col-md-8">
       <div class="row">
         {{#each cart.products}}
         <div class="col-md-6 mb-3">
-          <div class="card shadow-sm">
+          <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title">{{this.product.title}}</h5>
               <p class="card-text">Precio: ${{this.product.price}}</p>
-              <p class="card-text">Cantidad: <span id="qty-{{this.product._id}}">{{this.quantity}}</span></p>
 
-              <!-- Botones + y - -->
-              <div class="d-flex gap-2 mb-2">
-                <form action="/api/carts/{{../cart._id}}/products/{{this.product._id}}?_method=PUT" method="POST">
-                  <input type="hidden" name="quantity" value="{{inc this.quantity -1}}" />
-                  <button type="submit" class="btn btn-sm btn-secondary">-</button>
-                </form>
-                <form action="/api/carts/{{../cart._id}}/products/{{this.product._id}}?_method=PUT" method="POST">
-                  <input type="hidden" name="quantity" value="{{inc this.quantity 1}}" />
-                  <button type="submit" class="btn btn-sm btn-secondary">+</button>
-                </form>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <button class="btn btn-sm btn-outline-secondary btn-decrement" data-pid="{{this.product._id}}">-</button>
+                <span id="qty-{{this.product._id}}" class="mx-2">{{this.quantity}}</span>
+                <button class="btn btn-sm btn-outline-secondary btn-increment" data-pid="{{this.product._id}}">+</button>
               </div>
 
-              <!-- Eliminar con confirmación -->
-              <form action="/api/carts/{{../cart._id}}/products/{{this.product._id}}?_method=DELETE" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este producto del carrito?')">
-                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-              </form>
+              <button class="btn btn-sm btn-danger btn-remove" data-pid="{{this.product._id}}">
+                Eliminar
+              </button>
             </div>
           </div>
         </div>
@@ -37,20 +28,23 @@
       </div>
     </div>
 
-    <!-- Resumen -->
-    <div class="cart-summary col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h4>Total de la compra</h4>
-          <p class="fs-5 fw-bold">${{totalCart cart.products}}</p>
-          <form action="/api/carts/{{cart._id}}?_method=DELETE" method="POST" onsubmit="return confirm('¿Seguro que deseas vaciar todo el carrito?')">
-            <button type="submit" class="btn btn-warning w-100">Vaciar carrito</button>
-          </form>
-        </div>
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h4>Total de la compra</h4>
+        <p class="fs-5 fw-bold" id="cart-total">${{totalCart cart.products}}</p>
+        <form action="/api/carts/{{cart._id}}?_method=DELETE" method="POST" onsubmit="return confirm('¿Seguro que deseas vaciar todo el carrito?')">
+          <button type="submit" class="btn btn-warning w-100">Vaciar carrito</button>
+        </form>
       </div>
     </div>
   </div>
+
+  <!-- data attribute with cart id for client JS -->
+  <div id="cart-meta" data-cart-id="{{cart._id}}" style="display:none"></div>
+
   {{else}}
   <p>Tu carrito está vacío</p>
   {{/if}}
 </div>
+
+<script src="/js/cart.js" defer></script>
